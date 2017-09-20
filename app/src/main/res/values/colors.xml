@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ColorPrimary">#2196f3</color>
+    <color name="ColorPrimaryDark">#133d69</color>
+    <color name="tabsScrollColor">#004D40</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
+    <color name="background">#EEEEEE</color>
+    <color name="white">#e0f6ff</color>
+    <color name="bg_white">#c3ffffff</color>
+    <color name="footer_green">#45B24A</color>
+    <color name="footer_red">#EF432F</color>
+    <color name="bianco">#000000</color>
+</resources>

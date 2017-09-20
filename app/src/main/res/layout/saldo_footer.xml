@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/footer"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="@color/footer_green"
+    android:layout_height="@dimen/abc_action_bar_default_height_material">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="@string/saldo_disponibile"
+        android:gravity="left|center"
+        android:layout_marginLeft="24dp"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium.Inverse" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
+        android:text="€ 2,00"
+        android:id="@+id/totale_saldo_value"
+        android:layout_marginRight="24dp"
+        android:gravity="center|right" />
+</LinearLayout>

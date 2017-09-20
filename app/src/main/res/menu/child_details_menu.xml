@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/take_photo_menu_btn"
+        android:title="Take photo"
+        android:icon="@android:drawable/ic_menu_camera"
+        app:showAsAction="always"
+    />
+    <item
+        android:id="@+id/menu_mod_data_inizio"
+        android:orderInCategory="1"
+        app:showAsAction="never"
+        android:title="@string/mod_data_inizio"/>
+    <item
+        android:id="@+id/menu_mod_data_fine"
+        android:orderInCategory="2"
+        app:showAsAction="never"
+        android:title="@string/mod_data_fine"/>
+    <item
+        android:id="@+id/menu_mostra_presenze"
+        android:orderInCategory="3"
+        app:showAsAction="never"
+        android:title="@string/mostra_presenze"/>
+    <item
+        android:id="@+id/menu_mostra_ricariche"
+        android:orderInCategory="4"
+        app:showAsAction="never"
+        android:title="@string/mostra_ricariche"/>
+    <item
+        android:id="@+id/menu_mostra_tutto"
+        android:orderInCategory="5"
+        app:showAsAction="never"
+        android:title="@string/mostra_tutto"/>
+</menu>

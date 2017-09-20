@@ -1,0 +1,95 @@
+<resources>
+    <string name="app_name">Meets Food</string>
+    <string name="title_login">Login</string>
+    <string name="title_child_list">Figli registrati</string>
+    <string name="school">Scuola</string>
+    <string name="school_class">Classe</string>
+    <string name="school_year">Anno scolastico</string>
+    <string name="subscription">Data di iscrizione</string>
+    <string name="intolerances">Dieta / Intolleranze</string>
+    <string name="rate">Rate </string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="consumazione">Consumazione</string>
+    <string name="pasti_in_bianco">Pasto in bianco</string>
+    <string name="assenze">Assenza</string>
+    <string name="ok">ok</string>
+    <string name="cancel">cancel</string>
+    <string name="close">Chiudi</string>
+    <string name="choose_option_for_date">Stato presenza</string>
+    <string name="no_segnalazione">Togli segnalazione</string>
+    <string name="date">Date</string>
+    <string name="service">Service</string>
+    <string name="consumo">Consumo</string>
+    <string name="ricarica">Ricarica</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="prova">Large Text</string>
+    <string name="prova2">Medium Text</string>
+    <string name="total">Total:</string>
+    <string name="saldo">Saldo:</string>
+    <string name="photo_profile">Photo profile</string>
+    <string name="saldo_disponibile">Saldo disponibile</string>
+
+    <string name="menu_primo">Primo</string>
+    <string name="menu_secondo">Secondo</string>
+    <string name="menu_contorno">Contorno</string>
+    <string name="menu_dessert">Dessert</string>
+    <string name="menu_pasto_in_bianco">Pasta in bianco</string>
+    <string name="menu_alternativo">Menu alternativo</string>
+    <string name="loading">Loading</string>
+    <string name="istituto">Istituto</string>
+    <string name="codice_pan">Codice Pan</string>
+    <string name="card_id">Card Id</string>
+
+    <string name="resp_nome">Nome</string>
+    <string name="resp_cognome">Cognome</string>
+    <string name="resp_indirizzo">Indirizzo</string>
+    <string name="resp_localita">Città</string>
+    <string name="resp_cap">CAP</string>
+    <string name="resp_prov">Provincia</string>
+    <string name="resp_tel">Telefono</string>
+    <string name="resp_email">Email</string>
+    <string name="resp_cod_fisc">Codice Fiscale</string>
+
+    <!-- toolbar menu -->
+    <string name="change_password">Cambio password</string>
+    <string name="logout">Logout</string>
+    <string name="exit">Chiudi</string>
+    <string name="privacy">Privacy</string>
+
+    <!-- contatti -->
+    <string name="CONTATTO_NOME">Nominativo</string>
+    <string name="CONTATTO_TELEFONO">Telefono</string>
+    <string name="CONTATTO_EMAIL">Email</string>
+
+    <!-- child_details_menu -->
+    <string name="mod_data_inizio">Modifica data inizio</string>
+    <string name="mod_data_fine">Modifica data fine</string>
+    <string name="mostra_presenze">Mostra solo presenze</string>
+    <string name="mostra_ricariche">Mostra solo ricariche</string>
+    <string name="mostra_tutto">Mostra tutto</string>
+    <string name="title_activity_password_change">Modifica Password</string>
+
+    <string name="action_change_pwd">Modifica Password</string>
+    <string name="txt_password_old">Vecchia Password</string>
+    <string name="txt_password_new">Nuova Password</string>
+    <string name="txt_password_new_1">Conferma Password</string>
+
+    <string name="msg_cambio_password_ok">La tua password è stata cambiata.\nEsegui il logout per utilizzarla.</string>
+    <string name="msg_cambio_password_nok">La tua richiesta non è stata accetta.\nPrego controllare i dati immessi e riprovare!</string>
+    <string name="msg_cambio_password_exception">Errore di sistema\nPrego riprovare più tardi!</string>
+
+    <string name="txt_email">Email</string>
+    <string name="txt_cell_accesso">Cellulare</string>
+    <string name="txt_cardid_accesso">Card ID</string>
+    <string name="txt_pan_accesso">Codice PAN</string>
+    <string name="action_richiedi_accesso">Richiedi Accesso</string>
+    <string name="title_richiedi_accesso_info">Puoi richiedere l\'accesso solo se il tuo comune è abilitato al servizio. Inserisci i dati sotto per l\'attivazione:</string>
+    <string name="link_richiedi_accesso">Richiedi Accesso</string>
+    <string name="title_richiesta_accesso">Richiesta Accesso</string>
+    <string name="msg_richiesta_accesso_ok">La tua richiesta è stata accetta.\nLe credenziali ti verranno inviate via a breve!</string>
+    <string name="msg_richiesta_accesso_nok">La tua richiesta non è stata accetta.\nPrego controllare i dati immessi e riprovare.</string>
+    <string name="msg_richiesta_accesso_nok_commessa">La tua richiesta non è stata accetta.\nPrego controllare i dati immessi e riprovare.</string>
+    <string name="msg_exception">Errore di sistema\nPrego provare più tardi</string>
+</resources>
