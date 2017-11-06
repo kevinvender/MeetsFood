@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MyDatePicker" parent="@android:style/Widget.Material.Light.DatePicker">
+
+        <item name="android:textSize">20px</item>
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:spinnersShown">true</item>
+    </style>
+</resources>

@@ -11,4 +11,6 @@
     <color name="footer_green">#45B24A</color>
     <color name="footer_red">#EF432F</color>
     <color name="bianco">#000000</color>
+    <color name="orange">#FF8C00</color>
+    <color name="yellow">#FFFF00</color>
 </resources>

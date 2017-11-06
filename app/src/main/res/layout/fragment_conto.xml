@@ -1,51 +1,51 @@
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="fill_vertical"
     android:fillViewport="true">
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="0dp"
+        android:layout_height="wrap_content"
         android:clipChildren="false"
-        >
+        android:elevation="0dp">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:fillViewport="true"
-            android:elevation="6dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="?attr/actionBarSize"
             android:background="@color/bg_white"
-            android:layout_marginBottom="?attr/actionBarSize">
+            android:elevation="6dp"
+            android:fillViewport="true"
+            android:orientation="vertical">
 
-            <FrameLayout android:id="@+id/contoListContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
 
-                <ListView android:id="@+id/contoList"
+
+                <com.sidera.meetsfood.adapters.ContoListView
+                    android:id="@+id/contoList"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:drawSelectorOnTop="false" />
-            </FrameLayout>
+                    android:layout_height="wrap_content"
+                    android:drawSelectorOnTop="false"
+                    android:orientation="vertical"
+                    />
+
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:elevation="0dp"
             android:outlineProvider="bounds">
+
             <include
-                android:layout_width="match_parent"
                 android:id="@+id/footer"
-                android:layout_height="?attr/actionBarSize"
                 layout="@layout/saldo_footer"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" />
         </LinearLayout>
     </RelativeLayout>
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>

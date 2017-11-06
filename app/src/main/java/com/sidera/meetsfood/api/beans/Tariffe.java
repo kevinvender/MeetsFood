@@ -11,13 +11,9 @@ import java.sql.SQLException;
 
 public class Tariffe {
 
-    public String codice = "";
-    public String info = "";
-    public String tipologia = "";
+    public String codice ;
+    public String info ;
+    public String tipologia ;
 
-    public Tariffe(ResultSet resultSet) throws SQLException {
-        codice = resultSet.getString("TARIFFA");
-        info = resultSet.getString("DENO");
-        tipologia = resultSet.getString("TIPOLOGIA");
-    }
+    public Tariffe()  {}
 }

@@ -12,7 +12,7 @@ public class LoadPresenzeEvent {
     public String a;
     public String utenza;
     public String tipologia;
-    public String tipo_estrazione;
+   // public String tipo_estrazione;
 
     public LoadPresenzeEvent(String utenza, String tipologia, Date mese) {
         this.utenza = utenza;
@@ -26,6 +26,6 @@ public class LoadPresenzeEvent {
         this.da = new SimpleDateFormat("yyyy-MM-dd").format(da);
         this.a = new SimpleDateFormat("yyyy-MM-dd").format(a);
         this.tipologia = tipologia;
-        this.tipo_estrazione = "0";
+        //this.tipo_estrazione = "0";
     }
 }

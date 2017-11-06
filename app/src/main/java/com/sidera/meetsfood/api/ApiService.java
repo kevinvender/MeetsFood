@@ -7,12 +7,15 @@ import com.sidera.authenticator.ApiGeneral;
 import com.sidera.meetsfood.MeetsFoodApplication;
 import com.sidera.meetsfood.api.beans.Configurazione;
 import com.sidera.meetsfood.api.beans.ContabilitaRow;
+import com.sidera.meetsfood.api.beans.ContabilitaRowV20;
 import com.sidera.meetsfood.api.beans.Contatti;
+import com.sidera.meetsfood.api.beans.Disdette;
 import com.sidera.meetsfood.api.beans.FiglioDettagli;
 import com.sidera.meetsfood.api.beans.FiglioTestata;
 import com.sidera.meetsfood.api.beans.Menu;
 import com.sidera.meetsfood.api.beans.ResponseString;
 import com.sidera.meetsfood.api.beans.News;
+import com.sidera.meetsfood.api.beans.Tariffe;
 import com.sidera.meetsfood.api.exceptions.Error4xxException;
 import com.sidera.meetsfood.events.ApiErrorEvent;
 import com.sidera.meetsfood.events.BusProvider;
@@ -20,20 +23,30 @@ import com.sidera.meetsfood.events.ChangePasswordEvent;
 import com.sidera.meetsfood.events.ChildLoadedEvent;
 import com.sidera.meetsfood.events.ConfigLoadedEvent;
 import com.sidera.meetsfood.events.ContattiLoadedEvent;
+import com.sidera.meetsfood.events.DisdettaEvent;
+import com.sidera.meetsfood.events.DisdettaInfoLoadedEvent;
+import com.sidera.meetsfood.events.DisdettaSettedEvent;
 import com.sidera.meetsfood.events.EstrattoContoLoadedEvent;
 import com.sidera.meetsfood.events.ListLoadedEvent;
 import com.sidera.meetsfood.events.LoadChildEvent;
 import com.sidera.meetsfood.events.LoadConfigEvent;
 import com.sidera.meetsfood.events.LoadContattiEvent;
+import com.sidera.meetsfood.events.LoadDisdettaInfoEvent;
 import com.sidera.meetsfood.events.LoadEstrattoContoEvent;
 import com.sidera.meetsfood.events.LoadListEvent;
 import com.sidera.meetsfood.events.LoadMenuEvent;
 import com.sidera.meetsfood.events.LoadNewsEvent;
 import com.sidera.meetsfood.events.LoadPresenzeEvent;
+import com.sidera.meetsfood.events.LoadTariffeEvent;
 import com.sidera.meetsfood.events.MenuLoadedEvent;
 import com.sidera.meetsfood.events.NewsLoadedEvent;
 import com.sidera.meetsfood.events.PasswordChangedEvent;
+import com.sidera.meetsfood.events.PastoInBiancoEvent;
+import com.sidera.meetsfood.events.PastoInBiancoSettedEvent;
 import com.sidera.meetsfood.events.PresenzeLoadedEvent;
+import com.sidera.meetsfood.events.RevDisdettaEvent;
+import com.sidera.meetsfood.events.RevDisdettaSettedEvent;
+import com.sidera.meetsfood.events.TariffeLoadedEvent;
 import com.sidera.meetsfood.utils.AccountHolder;
 import com.sidera.meetsfood.utils.UserAgentInterceptor;
 import com.squareup.otto.Bus;
@@ -63,10 +76,15 @@ public class ApiService {
 
     public static FiglioTestata figlioTestata = null;
     public static FiglioDettagli figlioDettagli = null;
-    public static ArrayList<ContabilitaRow> estrattoConto = null;
-    public static ArrayList<ContabilitaRow> presenze = null;
+    public static ArrayList<ContabilitaRowV20> estrattoConto = null;
+    public static ArrayList<ContabilitaRowV20> presenze = null;
     public static ArrayList<News> news = null;
     public static ArrayList<Menu> menu = null;
+    public static ArrayList<Tariffe> tariffe = null;
+    public static ArrayList<Disdette> disdettaInfo = null;
+    public static Disdette disdettaRev = null;
+    public static Disdette disdetta = null;
+    public static Disdette pastoInBianco = null;
     public static ArrayList<Contatti> contatti = null;
     public static ArrayList<Configurazione> configCommessa = null;
     public static ResponseString responseString = null;
@@ -169,9 +187,9 @@ public class ApiService {
     @Subscribe
     public void onLoadPresenzeEvent(LoadPresenzeEvent event) {
         presenze = new ArrayList<>();
-        service.getConto(event.utenza, event.da, event.a, event.tipologia, event.tipo_estrazione).enqueue(new Callback<ArrayList<ContabilitaRow>>() {
+        service.getPresenze(event.utenza, event.da, event.a, event.tipologia).enqueue(new Callback<ArrayList<ContabilitaRowV20>>() {
             @Override
-            public void onResponse(Call<ArrayList<ContabilitaRow>> call, Response<ArrayList<ContabilitaRow>> response) {
+            public void onResponse(Call<ArrayList<ContabilitaRowV20>> call, Response<ArrayList<ContabilitaRowV20>> response) {
                 if (response.isSuccessful()) {
                     presenze = response.body();
                     bus.post(new PresenzeLoadedEvent(response.body()));
@@ -181,7 +199,7 @@ public class ApiService {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<ContabilitaRow>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<ContabilitaRowV20>> call, Throwable t) {
                 bus.post(new ApiErrorEvent(t));
             }
         });
@@ -191,9 +209,9 @@ public class ApiService {
     public void onLoadEstrattoContoEvent(LoadEstrattoContoEvent event) {
         estrattoConto = new ArrayList<>();
         //2016-06-01
-        service.getConto(event.utenza, event.da, event.a, event.tipologia,event.tipo_estrazione).enqueue(new Callback<ArrayList<ContabilitaRow>>() {
+        service.getConto(event.utenza, event.da, event.a, event.tipologia,event.tipo_estrazione).enqueue(new Callback<ArrayList<ContabilitaRowV20>>() {
             @Override
-            public void onResponse(Call<ArrayList<ContabilitaRow>> call, Response<ArrayList<ContabilitaRow>> response) {
+            public void onResponse(Call<ArrayList<ContabilitaRowV20>> call, Response<ArrayList<ContabilitaRowV20>> response) {
                 Log.e("ESTRATTO_CONTO","response:"+response.isSuccessful());
                 if (response.isSuccessful()) {
                     bus.post(new EstrattoContoLoadedEvent(response.body()));
@@ -204,7 +222,7 @@ public class ApiService {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<ContabilitaRow>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<ContabilitaRowV20>> call, Throwable t) {
                 bus.post(new ApiErrorEvent(t));
             }
         });
@@ -309,5 +327,110 @@ public class ApiService {
             }
         });
     }
+
+    @Subscribe
+    public void onLoadTariffeEvent(LoadTariffeEvent event) {
+        service.getTariffe(event.commessa, event.utenza, event.data).enqueue(new Callback<ArrayList<Tariffe>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Tariffe>> call, Response<ArrayList<Tariffe>> response) {
+                if (response.isSuccessful()) {
+                    tariffe = response.body();
+                    bus.post(new TariffeLoadedEvent(response.body()));
+                }
+                else
+                    bus.post(new ApiErrorEvent(new Error4xxException(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Tariffe>> call, Throwable t) {
+                bus.post(new ApiErrorEvent(t));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onLoadDisdettainfoEvent(LoadDisdettaInfoEvent event) {
+        disdettaInfo = new ArrayList<Disdette>();
+        service.infoDisdetta(event.commessa, event.utenza, event.data).enqueue(new Callback<ArrayList<Disdette>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Disdette>> call, Response<ArrayList<Disdette>> response) {
+                if (response.isSuccessful()) {
+                    disdettaInfo = response.body();
+                    bus.post(new DisdettaInfoLoadedEvent(response.body()));
+                }
+                else
+                    bus.post(new ApiErrorEvent(new Error4xxException(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<Disdette>> call, Throwable t) {
+                bus.post(new ApiErrorEvent(t));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onPastoInBiancoEvent(PastoInBiancoEvent event) {
+        pastoInBianco = new Disdette();
+        service.setPastoInBianco(event.commessa, event.utenza, event.data, event.tariffa).enqueue(new Callback<Disdette>() {
+
+            @Override
+            public void onResponse(Call<Disdette> call, Response<Disdette> response) {
+                if (response.isSuccessful()) {
+                    pastoInBianco = response.body();
+                    bus.post(new PastoInBiancoSettedEvent(response.body()));
+                } else
+                    bus.post(new ApiErrorEvent(new Error4xxException(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<Disdette> call, Throwable t) {
+                bus.post(new ApiErrorEvent(t));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onDisdettaEvent(DisdettaEvent event) {
+        disdetta = new Disdette();
+        service.setDisdetta(event.commessa, event.utenza, event.data, event.tariffa).enqueue(new Callback<Disdette>() {
+
+            @Override
+            public void onResponse(Call<Disdette> call, Response<Disdette> response) {
+                if (response.isSuccessful()) {
+                    disdetta = response.body();
+                    bus.post(new DisdettaSettedEvent(response.body()));
+                } else
+                    bus.post(new ApiErrorEvent(new Error4xxException(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<Disdette> call, Throwable t) {
+                bus.post(new ApiErrorEvent(t));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRevDisdettaEvent(RevDisdettaEvent event) {
+        disdettaRev = new Disdette();
+        service.revDisdetta(event.commessa, event.utenza, event.data).enqueue(new Callback<Disdette>() {
+
+            @Override
+            public void onResponse(Call<Disdette> call, Response<Disdette> response) {
+                if (response.isSuccessful()) {
+                    disdettaRev = response.body();
+                    bus.post(new RevDisdettaSettedEvent(response.body()));
+                } else
+                    bus.post(new ApiErrorEvent(new Error4xxException(response.code())));
+            }
+
+            @Override
+            public void onFailure(Call<Disdette> call, Throwable t) {
+                bus.post(new ApiErrorEvent(t));
+            }
+        });
+    }
+
 
 }

@@ -10,8 +10,5 @@ public class ContabilitaRowV20  extends ContabilitaRow
 {
     public String flag_giorno;
 
-    public ContabilitaRowV20(ResultSet resultSet) throws SQLException {
-        super(resultSet);
-        flag_giorno = resultSet.getString("FLAG_GIORNO");
-    }
+    public ContabilitaRowV20() {}
 }

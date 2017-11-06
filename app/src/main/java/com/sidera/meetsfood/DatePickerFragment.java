@@ -1,11 +1,18 @@
 package com.sidera.meetsfood;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import com.sidera.R;
+
 import java.util.Calendar;
+
+import static android.graphics.Color.*;
 
 public class DatePickerFragment extends DialogFragment{
 
@@ -33,8 +40,11 @@ public class DatePickerFragment extends DialogFragment{
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(),R.style.DatePickerDialogTheme, onDateSet, year, month, day);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(), onDateSet, year, month, day);
+        return dialog;
     }
 
     public void setCallBack(DatePickerDialog.OnDateSetListener onDate) {

@@ -31,4 +31,10 @@
         android:orderInCategory="5"
         app:showAsAction="never"
         android:title="@string/mostra_tutto"/>
+    <item
+        android:id="@+id/menu_mod_ord_desc"
+        android:orderInCategory="6"
+        app:showAsAction="never"
+        android:checkable="true"
+        android:title="Ordine decrescente"/>
 </menu>

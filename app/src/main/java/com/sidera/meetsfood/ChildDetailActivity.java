@@ -7,10 +7,12 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -122,7 +124,10 @@ public class ChildDetailActivity extends AppCompatActivity {
     private String tipo_estrazione = "1";
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     String strImagePath = "no image selected";
-    Context context;
+    public static Context context;
+    public static boolean decrescente;
+
+   // private Menu selectionMenu;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -172,6 +177,8 @@ public class ChildDetailActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        //get del parametro decrescente
+        getDecrescente();
     }
 
     @Override
@@ -191,8 +198,8 @@ public class ChildDetailActivity extends AppCompatActivity {
                 Calendar cal = Calendar.getInstance();
                 data_a = sdf.format(cal.getTime());
 
-                cal.add(Calendar.MONTH, -12);
-                data_da = sdf.format(cal.getTime());
+                getDaData();
+                getDecrescente();
             }
 
             bus.post(new LoadChildEvent(child.pagatore, child.utenza, child.id_tipologia));
@@ -320,6 +327,17 @@ public class ChildDetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.child_details_menu, menu);
+
+
+        return true;
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        menu.findItem(R.id.menu_mod_ord_desc).setChecked(getDecrescente());
+
         return true;
     }
 
@@ -353,6 +371,9 @@ public class ChildDetailActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -405,9 +426,9 @@ public class ChildDetailActivity extends AppCompatActivity {
 
                 Bundle bdDa = new Bundle();
                 bdDa.putString("data", data_da);
-
                 dpfDa.setArguments(bdDa);
                 dpfDa.setCallBack(onDateDataDaSet);
+
                 dpfDa.show(getFragmentManager().beginTransaction(), "DatePickerFragment");
 
                 return true;
@@ -434,6 +455,17 @@ public class ChildDetailActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_mostra_tutto:
                 tipo_estrazione = "1";
+                bus.post(new LoadEstrattoContoEvent(child.pagatore, child.utenza, data_da, data_a, child.id_tipologia, tipo_estrazione));
+
+                return true;
+            case R.id.menu_mod_ord_desc:
+                if(item.isChecked()){
+                    item.setChecked(false);
+                    setDecrescente(false);
+                }else{
+                    item.setChecked(true);
+                    setDecrescente(true);
+                }
                 bus.post(new LoadEstrattoContoEvent(child.pagatore, child.utenza, data_da, data_a, child.id_tipologia, tipo_estrazione));
 
                 return true;
@@ -676,7 +708,7 @@ public class ChildDetailActivity extends AppCompatActivity {
 
    //--------------------------------------
 
-
+//datepicker listener
 
 
     DatePickerDialog.OnDateSetListener onDateDataDaSet = new DatePickerDialog.OnDateSetListener() {
@@ -688,6 +720,7 @@ public class ChildDetailActivity extends AppCompatActivity {
             cal.set(year, monthOfYear, dayOfMonth);
 
             data_da = sdf.format(cal.getTime());
+            setDaData(data_da);
             bus.post(new LoadEstrattoContoEvent(child.pagatore, child.utenza, data_da, data_a, child.id_tipologia, tipo_estrazione));
         }
     };
@@ -930,8 +963,7 @@ public class ChildDetailActivity extends AppCompatActivity {
             Calendar cal = Calendar.getInstance();
             data_a = sdf.format(cal.getTime());
 
-            cal.add(Calendar.MONTH, -12);
-            data_da = sdf.format(cal.getTime());
+            getDaData();
         }
 
 
@@ -1011,6 +1043,11 @@ public class ChildDetailActivity extends AppCompatActivity {
         }
     }
 
+    public static Context getContext(){
+
+        return context;
+    }
+
     public static Bitmap rotate(Bitmap bitmap, float degrees) {
         Matrix matrix = new Matrix();
         matrix.postRotate(degrees);
@@ -1022,4 +1059,38 @@ public class ChildDetailActivity extends AppCompatActivity {
         matrix.preScale(horizontal ? -1 : 1, vertical ? -1 : 1);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
+
+
+    public void setDaData(String daDate){
+
+        SharedPreferences.Editor editor = getSharedPreferences(getPackageName(), MODE_PRIVATE).edit();
+        editor.putString("da_data", daDate);
+        editor.apply();
+    }
+    public void setDecrescente(boolean decrescente){
+
+        SharedPreferences.Editor editor = getSharedPreferences(getPackageName(), MODE_PRIVATE).edit();
+        editor.putBoolean("decrescente", decrescente);
+        editor.apply();
+        getDecrescente();
+    }
+
+    public void getDaData(){
+        SharedPreferences prefs = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+        String daData = prefs.getString("da_data", null);
+        if (daData != null) {
+            data_da = daData;
+        }else{
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -12);
+            data_da = sdf.format(cal.getTime());
+        }
+    }
+    public boolean getDecrescente(){
+        SharedPreferences prefs = getSharedPreferences(getPackageName(), MODE_PRIVATE);
+         decrescente = prefs.getBoolean("decrescente", false);
+
+        return decrescente;
+    }
+
 }

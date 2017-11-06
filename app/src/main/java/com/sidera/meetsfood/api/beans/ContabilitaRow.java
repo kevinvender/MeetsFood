@@ -16,5 +16,5 @@ public class ContabilitaRow {
     public String tipologia;
     public String pasto_bianco;
 
-    public ContabilitaRow(ResultSet resultSet) {}
+    public ContabilitaRow() {}
 }

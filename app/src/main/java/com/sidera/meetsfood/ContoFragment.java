@@ -1,36 +1,36 @@
 package com.sidera.meetsfood;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.sidera.R;
+import com.sidera.meetsfood.adapters.ContoListView;
 import com.sidera.meetsfood.adapters.EstrattoContoAdapter;
 import com.sidera.meetsfood.api.ApiService;
-import com.sidera.meetsfood.api.beans.ContabilitaRow;
-import com.sidera.meetsfood.api.beans.FiglioDettagli;
+import com.sidera.meetsfood.api.beans.ContabilitaRowV20;
 import com.sidera.meetsfood.api.beans.FiglioTestata;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class ContoFragment extends Fragment {
-
+    Activity activity;
 
     public ContoFragment() {
         // Required empty public constructor
@@ -39,7 +39,6 @@ public class ContoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     View rootView;
@@ -49,11 +48,27 @@ public class ContoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_conto, container, false);
-        ArrayList<ContabilitaRow> l = ApiService.estrattoConto != null ? ApiService.estrattoConto : new ArrayList<ContabilitaRow>();
+        ArrayList<ContabilitaRowV20> l = ApiService.estrattoConto != null ? ApiService.estrattoConto : new ArrayList<ContabilitaRowV20>();
+
+        boolean decrescente;
+        decrescente = ChildDetailActivity.decrescente;
+        if (decrescente) {
+            Collections.sort(l, new Comparator<ContabilitaRowV20>() {
+                @Override
+                public int compare(ContabilitaRowV20 o1, ContabilitaRowV20 o2) {
+                    if (o1.data == null || o2.data == null)
+                        return 0;
+                    return o2.data.compareTo(o1.data);
+                }
+            });
+        }
+
+
         FiglioTestata figlioTestata = ApiService.figlioTestata != null ? ApiService.figlioTestata : new FiglioTestata();
-        ListView listView = (ListView) rootView.findViewById(R.id.contoList);
+        ContoListView listView = (ContoListView) rootView.findViewById(R.id.contoList);
         adapter = new EstrattoContoAdapter(getActivity(), l);
         listView.setAdapter(adapter);
+
         LinearLayout footer = (LinearLayout) rootView.findViewById(R.id.footer);
         TextView tv_saldo_footer = (TextView) rootView.findViewById(R.id.totale_saldo_value);
         DecimalFormat df = new DecimalFormat("#.00");
@@ -77,7 +92,7 @@ public class ContoFragment extends Fragment {
     }
 
     public void refresh() {
-        ArrayList<ContabilitaRow> l = ApiService.estrattoConto != null ? ApiService.estrattoConto : new ArrayList<ContabilitaRow>();
+        ArrayList<ContabilitaRowV20> l = ApiService.estrattoConto != null ? ApiService.estrattoConto : new ArrayList<ContabilitaRowV20>();
         adapter.setData(l);
     }
 
@@ -92,4 +107,5 @@ public class ContoFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
     }
+
 }

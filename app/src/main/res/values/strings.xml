@@ -92,4 +92,15 @@
     <string name="msg_richiesta_accesso_nok">La tua richiesta non è stata accetta.\nPrego controllare i dati immessi e riprovare.</string>
     <string name="msg_richiesta_accesso_nok_commessa">La tua richiesta non è stata accetta.\nPrego controllare i dati immessi e riprovare.</string>
     <string name="msg_exception">Errore di sistema\nPrego provare più tardi</string>
+
+
+    <string name="msg_pastoinbianco_ok">Richiesta pasto in bianco confermata</string>
+    <string name="msg_pastoinbianco_error">Problemi nel salvataggio del pasto in bianco</string>
+    <string name="msg_disdetta_ok">Disdetta del pasto confermata</string>
+    <string name="msg_disdetta_error">Problemi nel salvatagggio della disdetta</string>
+    <string name="msg_data_min">La data non può essere inferiore alla data odierna</string>
+    <string name="msg_data_max">Non consentito, fuori tempo massimo</string>
+    <string name="msg_data_out">Operazione non prevista per questa giornata</string>
+    <string name="msg_disdetta_doppia">Operazione già eseguita.</string>
+
 </resources>

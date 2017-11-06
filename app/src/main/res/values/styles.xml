@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -20,5 +20,49 @@
 
     <style name="TextAppearance.MaterialCalendarWidget.WeekDay" parent="android:TextAppearance.DeviceDefault.Small">
         <item name="android:textSize">12sp</item>
+    </style>
+
+
+    <style name="PauseDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+
+        <item name="android:background">@drawable/dialog_bg</item>
+        <item name="android:windowBackground">@drawable/dialog_bg_trans</item>
+        <item name="android:windowTitleStyle">@style/PauseDialogTitle</item>
+
+    </style>
+
+    <style name="PauseDialogTitle" parent="@android:style/TextAppearance.DialogWindowTitle">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:background">@color/ColorPrimary</item>
+    </style>
+    <style name="DialogWindowTitle">
+        <item name="android:maxLines">1</item>
+
+        <item name="android:textAppearance">@android:style/TextAppearance.DialogWindowTitle</item>
+    </style>
+
+
+
+    <style name="MyDatePicker" parent="@android:style/Widget.Holo.DatePicker" >
+
+        <item name="android:textSize" >20px</item>
+        <item name="android:datePickerMode" >spinner</item>
+        <item name="android:spinnersShown" >true</item>
+    </style>
+
+    <style name="datePickerTheme" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:datePickerStyle">@style/MyDatePicker</item>
+    </style>
+
+    <style name="DatePickerDialogTheme" parent="android:Theme.Holo.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
+
     </style>
 </resources>

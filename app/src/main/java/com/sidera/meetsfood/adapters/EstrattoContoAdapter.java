@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.sidera.R;
 import com.sidera.meetsfood.api.beans.ContabilitaRow;
+import com.sidera.meetsfood.api.beans.ContabilitaRowV20;
 import com.sidera.meetsfood.api.beans.FiglioTestata;
 
 import java.text.DecimalFormat;
@@ -28,24 +29,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 
-public class EstrattoContoAdapter extends ArrayAdapter<ContabilitaRow> {
+public class EstrattoContoAdapter extends ArrayAdapter<ContabilitaRowV20> {
     private LayoutInflater inflater;
-    ArrayList<ContabilitaRow> list;
+    ArrayList<ContabilitaRowV20> list;
 
-    public EstrattoContoAdapter(Context context, ArrayList<ContabilitaRow> list) {
+    public EstrattoContoAdapter(Context context, ArrayList<ContabilitaRowV20> list) {
         super(context, 0, list);
         this.inflater = LayoutInflater.from(context);
         this.list = list;
     }
 
 
-    public void setData(ArrayList<ContabilitaRow> list) {
+    public void setData(ArrayList<ContabilitaRowV20> list) {
         this.list = list;
         notifyDataSetChanged();
     }
 
     @Override
-    public ContabilitaRow getItem(int position) {
+    public ContabilitaRowV20 getItem(int position) {
         return this.list.get(position);
     }
 
