@@ -15,6 +15,7 @@ public class User {
     public String token;
     public String profilo;
     public String keym;
+    public String sesso;
 
     public User() {}
 }

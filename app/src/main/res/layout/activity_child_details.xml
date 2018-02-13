@@ -22,7 +22,8 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:statusBarScrim="@null">
             <ImageView
                 android:id="@+id/header_image"
                 android:layout_width="match_parent"
@@ -61,5 +62,56 @@
         app:tabMode="scrollable"
         android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"/>
     />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <WebView  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/webViewMeetsFoodPay"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone"
+       />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/title_web_view"
+                android:layout_width="fill_parent"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="2dp"
+                android:background="@color/ColorPrimary"
+                android:padding="5dp"
+                android:text="@string/web_view_title"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+                <Button
+                    android:id="@+id/btn_pagamenti_close"
+                    android:layout_alignParentTop="true"
+                    android:text="Chiudi"
+                    android:textColor="#FFFFFF"
+                    android:textSize="9sp"
+
+                    android:layout_width="52dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/buttonshape"
+                    android:shadowColor="#A8A8A8"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="2"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="8dp"
+                    android:visibility="gone"
+
+                    />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

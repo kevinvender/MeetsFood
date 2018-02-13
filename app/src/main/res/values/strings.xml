@@ -103,4 +103,7 @@
     <string name="msg_data_out">Operazione non prevista per questa giornata</string>
     <string name="msg_disdetta_doppia">Operazione già eseguita.</string>
 
+
+    <string name="web_view_title">MEETSFOOD PAGAMENTI</string>
+
 </resources>

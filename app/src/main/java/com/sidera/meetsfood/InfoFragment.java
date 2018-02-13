@@ -29,12 +29,16 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.zxing.WriterException;
 import com.sidera.R;
 import com.sidera.meetsfood.api.ApiService;
+import com.sidera.meetsfood.api.beans.Configurazione;
 import com.sidera.meetsfood.api.beans.FiglioDettagli;
 import com.sidera.meetsfood.api.beans.FiglioTestata;
 import com.sidera.meetsfood.data.Child;
 import com.sidera.meetsfood.data.Tariffa;
+import com.sidera.meetsfood.events.ConfigLoadedEvent;
+import com.squareup.otto.Subscribe;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,6 +50,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
+
+import static android.R.attr.bitmap;
+
 
 public class InfoFragment extends Fragment {
 
@@ -55,6 +64,10 @@ public class InfoFragment extends Fragment {
 
     private File filename = null;
     private File filename_icon = null;
+    private  boolean qrId = false;
+    private  boolean qrCF = false;
+    private  Bitmap   bitmapQrId ;
+    private  Bitmap   bitmapQrCF ;
 
     public static InfoFragment newInstance() {
         Bundle args = new Bundle();
@@ -77,6 +90,20 @@ public class InfoFragment extends Fragment {
         ((TextView) rootView.findViewById(R.id.textPan)).setText(d.codice_pan);
         ((TextView) rootView.findViewById(R.id.textCardId)).setText(d.card_id);
 
+
+        //vers 1.7
+        if(d.card_id != null && !d.card_id.trim().equals("")) {
+                QRGEncoder qrgEncoder = new QRGEncoder(d.card_id, null, QRGContents.Type.TEXT, 300);
+                try {
+                    // Getting QR-Code as Bitmap
+                    bitmapQrId = qrgEncoder.encodeAsBitmap();
+
+                    // Setting Bitmap to ImageView
+                    ((ImageView) rootView.findViewById(R.id.imgCardId)).setImageBitmap(bitmapQrId);
+                } catch (WriterException ex) {
+                    ex.printStackTrace();
+                }
+        }
         ((TextView) rootView.findViewById(R.id.textNome)).setText(d.nome_resp);
         ((TextView) rootView.findViewById(R.id.textCognome)).setText(d.cognome_resp);
         ((TextView) rootView.findViewById(R.id.textIndirizzo)).setText(d.indirizzo_resp);
@@ -86,6 +113,22 @@ public class InfoFragment extends Fragment {
 
         ((TextView) rootView.findViewById(R.id.textTelefono)).setText(d.telefono_resp);
         ((TextView) rootView.findViewById(R.id.textEmail)).setText(d.email_resp);
+
+
+        //vers 1.7
+        if(d.codiceFiscale_resp != null && !d.codiceFiscale_resp.trim().equals("")) {
+            QRGEncoder qrgEncoder = new QRGEncoder(d.codiceFiscale_resp, null, QRGContents.Type.TEXT, 300);
+            try {
+                // Getting QR-Code as Bitmap
+                bitmapQrCF = qrgEncoder.encodeAsBitmap();
+
+                // Setting Bitmap to ImageView
+                ((ImageView) rootView.findViewById(R.id.imgCodiceFisc)).setImageBitmap(bitmapQrCF);
+            } catch (WriterException ex) {
+                ex.printStackTrace();
+            }
+        }
+
         ((TextView) rootView.findViewById(R.id.textCodiceFisc)).setText(d.codiceFiscale_resp);
     }
 
@@ -272,5 +315,24 @@ public class InfoFragment extends Fragment {
             }
         }
         return inSampleSize;
+    }
+    //vers 1.7
+    @Subscribe
+    public void onConfigLoadedEvent(ConfigLoadedEvent evt) {
+
+
+        Log.e("CONFIG", "tot:" + ApiService.configCommessa.size());
+        ArrayList<Configurazione> confCommessa = ApiService.configCommessa;
+        for (int i = 0; i < confCommessa.size(); i++) {
+            Configurazione conf = confCommessa.get(i);
+            Log.e("CONFIG", conf.codice + ":" + conf.valore);
+            if(conf.codice.equals("QR_ID_INFO") &&  conf.valore.equals("1")){
+                 qrId = true;
+            }else  if(conf.codice.equals("QR_CF_INFO") &&  !conf.valore.equals("")){
+                 qrCF= true;
+            }
+
+
+        }
     }
 }

@@ -13,12 +13,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,6 +28,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -43,12 +48,21 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ActionProvider;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -81,6 +95,7 @@ import com.sidera.meetsfood.events.PresenzeLoadedEvent;
 import com.sidera.meetsfood.events.ReloadInterfaceEvent;
 import com.sidera.meetsfood.utils.AccountHolder;
 //import com.sidera.meetsfood.utils.PickImageActivity;
+import com.sidera.meetsfood.utils.ConnectivityUtils;
 import com.sidera.meetsfood.utils.Utility;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -115,6 +130,7 @@ public class ChildDetailActivity extends AppCompatActivity {
     private File filename_icon = null;
     private Uri imageUri;
     public boolean showMenu = true;
+    public boolean canPay = false;
     public int nrTab = 6;
     private int PICK_IMAGE_REQUEST = 2;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
@@ -126,6 +142,10 @@ public class ChildDetailActivity extends AppCompatActivity {
     String strImagePath = "no image selected";
     public static Context context;
     public static boolean decrescente;
+    public WebView webView;
+    public Button webButton;
+    public TextView webTitle;
+    public String urlPagamenti = "";
 
    // private Menu selectionMenu;
     /**
@@ -138,6 +158,7 @@ public class ChildDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_child_details);
+
         //-----------------------------------------------------
         //modifiche
         context = ChildDetailActivity.this;
@@ -178,12 +199,14 @@ public class ChildDetailActivity extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
         //get del parametro decrescente
+
         getDecrescente();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         filename_tmp = new File(getFilesDir(), "profile_tmp" + child.utenza + ".png");
         filename = new File(getFilesDir(), "profile" + child.utenza + ".png");
         imageUri = FileProvider.getUriForFile(this, CONTENT_FILE_PROVIDER, filename_tmp);
@@ -302,9 +325,17 @@ public class ChildDetailActivity extends AppCompatActivity {
                 showMenu = false;
                 nrTab = 5;
                 adapter.notifyDataSetChanged();
+             //vers 1.7
+            } else  if(conf.codice.equals("ABILITA_PAGAMENTI") &&  conf.valore.equals("1")){
+                   canPay= true;
+            }else  if(conf.codice.equals("URL_PAGAMENTI") &&  !conf.valore.equals("")){
+                urlPagamenti= conf.valore;
             }
+
+
         }
     }
+
 
     @Subscribe
     public void onMenuLoadedEvent(MenuLoadedEvent evt) {
@@ -328,7 +359,6 @@ public class ChildDetailActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.child_details_menu, menu);
 
-
         return true;
     }
 
@@ -337,6 +367,7 @@ public class ChildDetailActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
 
         menu.findItem(R.id.menu_mod_ord_desc).setChecked(getDecrescente());
+        menu.findItem(R.id.menu_effettua_ricarica).setVisible(canPay);
 
         return true;
     }
@@ -469,10 +500,97 @@ public class ChildDetailActivity extends AppCompatActivity {
                 bus.post(new LoadEstrattoContoEvent(child.pagatore, child.utenza, data_da, data_a, child.id_tipologia, tipo_estrazione));
 
                 return true;
+            case R.id.menu_effettua_ricarica:
+                //if abilitato a ricarica
+                if(isOnline()) {
+                    openWebPage("MeetsFood", 106107, 1);
+                }
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void openWebPage(String user, int utenza, int tipologia) {
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.detail_tabs);
+
+        String url = urlPagamenti;
+        url = url + "?user="+ user ;
+        url = url + "&utenza=" + utenza;
+        url = url + "&id_tipologia=" + tipologia;
+        webButton = (Button) findViewById(R.id.btn_pagamenti_close);
+        webTitle = (TextView) findViewById(R.id.title_web_view);
+        webView = (WebView) findViewById(R.id.webViewMeetsFoodPay);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setUserAgentString("Android");
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onReceivedTitle(WebView view, String title) {
+                getWindow().setTitle(title); //Set Activity tile to page title.
+            }
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                Log.d("LogTag", message);
+                if(message.equals("payment_succes")){
+                    webView.setVisibility(View.GONE);
+                    webButton.setVisibility(View.GONE);
+                    webTitle.setVisibility(View.GONE);
+                }else if(message.equals("payment_failure")){
+                    webView.setVisibility(View.GONE);
+                    webButton.setVisibility(View.GONE);
+                    webTitle.setVisibility(View.GONE);
+                }
+
+                result.confirm();
+                return true;
+            }
+        });
+        webView.loadUrl(url);
+        //webView.loadUrl("javascript:alert(paymentOk())");
+        webView.setWebViewClient(new WebViewClient(){
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url){
+                view.loadUrl(url);
+                return true;
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                if (url.endsWith("#closeWebview")){
+                   webView.setVisibility(View.GONE);
+                    webButton.setVisibility(View.GONE);
+                    webTitle.setVisibility(View.GONE);
+                    tipo_estrazione = "2";
+                    bus.post(new LoadEstrattoContoEvent(child.pagatore, child.utenza, data_da, data_a, child.id_tipologia, tipo_estrazione));
+                    tabLayout.getTabAt(2).select();
+                }
+            }
+        });
+
+        webButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                //webView.reload();
+               // webView.destroy();
+                webView.setVisibility(View.GONE);
+                webButton.setVisibility(View.GONE);
+                webTitle.setVisibility(View.GONE);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                tipo_estrazione = "2";
+                bus.post(new LoadEstrattoContoEvent(child.pagatore, child.utenza, data_da, data_a, child.id_tipologia, tipo_estrazione));
+                tabLayout.getTabAt(2).select();
+            }
+        });
+        webView.setVisibility(View.VISIBLE);
+        webButton.setVisibility(View.VISIBLE);
+        webTitle.setVisibility(View.VISIBLE);
+       // setRequestedOrientation(this.getResources().getConfiguration().orientation);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+    }
+
 
 
     private void readExternalStorage() {
@@ -1091,6 +1209,10 @@ public class ChildDetailActivity extends AppCompatActivity {
          decrescente = prefs.getBoolean("decrescente", false);
 
         return decrescente;
+    }
+
+    private boolean isOnline() {
+        return ConnectivityUtils.isNetworkConnected(context);
     }
 
 }

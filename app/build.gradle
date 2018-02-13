@@ -8,8 +8,8 @@ android {
         applicationId "com.sidera.meetsfood"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.5"
+        versionCode 8
+        versionName "1.7"
     }
     buildTypes {
         release {
@@ -33,11 +33,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:cardview-v7:23.4.0'
-    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:design:24.2.0'
+    compile 'com.android.support:recyclerview-v7:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
+    compile 'com.android.support:support-v4:24.2.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
     compile 'com.squareup.retrofit2:converter-jackson:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
@@ -45,4 +45,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'info.guardianproject.netcipher:netcipher:1.2'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
+    //vers 1.7
+    compile 'androidmads.library.qrgenearator:QRGenearator:1.0.0'
 }

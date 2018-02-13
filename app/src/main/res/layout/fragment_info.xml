@@ -230,6 +230,11 @@
                         android:text="@string/card_id"
                         android:id="@+id/labelCardId" />
 
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/imgCardId"/>
+
                     <TextView
                         style="@style/Base.TextAppearance.AppCompat.Subhead"
                         android:layout_width="wrap_content"
@@ -551,6 +556,11 @@
                             android:id="@+id/labelCodiceFisc"
                             style="@style/Base.TextAppearance.AppCompat.Caption"
                             android:text="@string/resp_cod_fisc" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/imgCodiceFisc"/>
 
                         <TextView
                             android:layout_width="wrap_content"

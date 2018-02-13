@@ -37,4 +37,10 @@
         app:showAsAction="never"
         android:checkable="true"
         android:title="Ordine decrescente"/>
+    <item
+        android:id="@+id/menu_effettua_ricarica"
+        android:orderInCategory="7"
+        app:showAsAction="never"
+        android:title="Ricarica"
+        android:visible="false"/>
 </menu>

@@ -28,6 +28,7 @@ public class FiglioDettagli {
 
     public String card_id;
     public String codice_pan;
+    public String sesso;
 
 
     public FiglioDettagli() {}

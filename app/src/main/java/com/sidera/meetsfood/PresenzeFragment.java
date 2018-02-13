@@ -78,6 +78,7 @@ public class PresenzeFragment extends Fragment{
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private List<Integer> presenzeBianco = new ArrayList<Integer>();
     private List<Integer> presenze = new ArrayList<Integer>();
     private List<Integer> assenze = new ArrayList<Integer>();
     private List<Integer> inBianco = new ArrayList<Integer>();
@@ -134,7 +135,11 @@ public class PresenzeFragment extends Fragment{
                         this.inBianco.add(c.get(Calendar.DATE));
                     }
                 }else {
-                    //this.inBianco.add(c.get(Calendar.DATE));
+                    if ( r.flag_giorno.equals("P")) {
+                        this.presenzeBianco.add(c.get(Calendar.DATE));
+                    }else if ( r.flag_giorno.equals("BIANCO")) {
+                        this.inBianco.add(c.get(Calendar.DATE));
+                    }
                 }
             }
         }
@@ -260,6 +265,7 @@ public class PresenzeFragment extends Fragment{
                             if (selectedDate.getMonth() == CalendarDay.today().getMonth() && presenze.size() == 0) {
                                 getDaysInfo();
                             } else {
+                                presenzeBianco.clear();
                                 presenze.clear();
                                 assenze.clear();
                                 inBianco.clear();
@@ -280,6 +286,7 @@ public class PresenzeFragment extends Fragment{
                             if (selectedDate.getMonth() == CalendarDay.today().getMonth() && presenze.size() == 0) {
                                getDaysInfo();
                             } else {
+                                presenzeBianco.clear();
                                 presenze.clear();
                                 assenze.clear();
                                 inBianco.clear();
@@ -721,6 +728,7 @@ public class PresenzeFragment extends Fragment{
                 }
             }
         });*/
+        calendarView.setSelectedDate(ApiService.presenzeMonth);
 
         calendarView.setSelectionColor(ContextCompat.getColor(getContext(), R.color.background));
         calendarView.setOnMonthChangedListener(new OnMonthChangedListener() {
@@ -731,8 +739,15 @@ public class PresenzeFragment extends Fragment{
                 act.progressDialog.show();
 
                 if (date.getMonth() == CalendarDay.today().getMonth() && presenze.size() == 0) {
+                    presenzeBianco.clear();
+                    presenze.clear();
+                    assenze.clear();
+                    inBianco.clear();
+                    disdette.clear();
+                    daCalendario.clear();
                     getDaysInfo();
                 } else {
+                    presenzeBianco.clear();
                     presenze.clear();
                     assenze.clear();
                     inBianco.clear();
@@ -786,6 +801,38 @@ public class PresenzeFragment extends Fragment{
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
+                }else  if(presenzeBianco.contains(date.getDay())) {
+                    final Date disdettaDate = selectedDate.getDate();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
+                    String TitleData = sdf.format(disdettaDate);
+
+                    AlertDialog.Builder builder;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        builder = new AlertDialog.Builder(context  , R.style.PauseDialog);
+                    } else {
+                        builder = new AlertDialog.Builder(context);
+                    }
+                    TextView textView = new TextView(context);
+                    textView.setTextColor(Color.BLACK);
+                    textView.setTextSize(20);
+                    textView.setGravity(Gravity.CENTER);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 0, 0, 0);
+                    textView.setLayoutParams(lp);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//nougat
+                        textView.setText(noTrailingwhiteLines(fromHtml("<h4 align='center'>"+TitleData+"</h4>", Html.FROM_HTML_MODE_COMPACT)));
+                    } else {
+                        textView.setText(noTrailingwhiteLines(fromHtml("<h4 align='center'>"+TitleData+"</h4>")));
+                    }
+                    builder.setCustomTitle(textView)
+                            .setMessage("Hai effettuato la consumazione di un pasto in bianco.")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                 }else if(inBianco.contains(date.getDay())) {
                      bus.post(new LoadDisdettaInfoEvent( ApiService.figlioTestata.id_commessa, ApiService.figlioTestata.utenza, date.getDate()));
                      progressDialog.show();
@@ -825,6 +872,8 @@ public class PresenzeFragment extends Fragment{
                    // bgColor = ContextCompat.getColor(getContext(),R.color.ColorPrimary);
                     drawable = ContextCompat.getDrawable(context,     R.drawable.today_da_calendario);
                 else if(presenze.contains(CalendarDay.today().getDay()))
+                    drawable = ContextCompat.getDrawable(context,     R.drawable.today_pasto_effettuato);
+                else if(presenzeBianco.contains(CalendarDay.today().getDay()))
                     drawable = ContextCompat.getDrawable(context,     R.drawable.today_pasto_effettuato);
                 else if(disdette.contains(CalendarDay.today().getDay()))
                     drawable = ContextCompat.getDrawable(context,     R.drawable.today_disdetta);
@@ -870,6 +919,8 @@ public class PresenzeFragment extends Fragment{
                     //not change
                     return false;
                 }else if(presenze.contains(day.getDay()))
+                    return true;
+                 else if(presenzeBianco.contains(day.getDay()))
                     return true;
                 return false;
             }

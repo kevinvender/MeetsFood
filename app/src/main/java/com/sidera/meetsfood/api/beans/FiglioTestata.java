@@ -17,4 +17,5 @@ public class FiglioTestata implements Serializable {
     public String display_name;
     public int pasti_totali;
     public int pasti_consumati;
+    public String sesso;
 }
